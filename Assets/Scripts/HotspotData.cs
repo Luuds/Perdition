@@ -111,21 +111,10 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 		StartCoroutine(CreateMenu()); 
 		
 	}
-	void OnTriggerEnter(Collider other){
-		//Debug.Log("Hey there stranger");
-	//this is the open command
-	if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Open"){
-		//Debug.Log("Hey there stranger you open me up!");
-		OpenInventory(); 
-		GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName = ""; 
-		}
-	//put other commands here 
-	}
 	void OnTriggerStay(Collider other){
-		//Debug.Log("Hey there stranger");
 	//this is the open command
 	if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Open"){
-		//Debug.Log("Hey there stranger you open me up!");
+	
 		OpenInventory(); 
 			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName = ""; 
 		}

@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour {
 		controll = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gamecontroller>(); 
 		cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); 
 		agent = GameObject.FindGameObjectWithTag("Player").GetComponent<NavMeshAgent>();
-		StartCoroutine(InputListener());
-		 agent.autoTraverseOffMeshLink = false;
+		//StartCoroutine(InputListener());
+		agent.autoTraverseOffMeshLink = false;
      while (true) {
        if (agent.isOnOffMeshLink) {
          if (method == OffMeshLinkMoveMethod.Parabola)
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour {
        yield return null;
      }
    }
-
+/*
 	private IEnumerator InputListener() 
 {
     while(enabled)
@@ -87,19 +87,25 @@ public class PlayerController : MonoBehaviour {
         count += Time.deltaTime;// increment counter by change in time between frames
         yield return null; // wait for the next frame
     }
-    //SingleClick();
+   SingleClick();
 	}
-
 
 	private void SingleClick()
-	{
-    Debug.Log("Single Click");
-	}
-
-	private void DoubleClick()
-	
-	{	interactionName=""; 	
-		
+	{}*/
+	void Update(){
+	 if(Input.GetMouseButtonDown(0)){	
+		Ray ray =Camera.main.ScreenPointToRay (Input.mousePosition);
+		RaycastHit hit;
+		bool hotspotHit= false; 
+		if(Physics.Raycast (ray, out hit)){
+		if(hit.collider.gameObject.layer != LayerMask.NameToLayer("HotspotLayer")) {
+			hotspotHit=false;
+			}else{
+			hotspotHit=true; 
+			}
+		}
+		if(!hotspotHit){
+		interactionName=""; 	
 		if((!inv.invOpen_main_inv&&!controll.menuOpen)&&(!controll.menuOpen||!inv.invOpen_main_inv)){ //no menu should be open; 
 			NavMeshHit myHit;
 			NavMeshHit myHit1;
@@ -127,6 +133,13 @@ public class PlayerController : MonoBehaviour {
 				
 			}
   		}
+	}
+	}
+	}
+
+	private void DoubleClick()
+	
+	{	
 	}
 
 }
