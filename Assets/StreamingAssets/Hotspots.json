@@ -1,0 +1,42 @@
+[
+   {
+      "ID":0,
+      "Title":"Purple Box",
+      "Description":["A Purple Box, that's it really.", "No Really. It's a Purple Box"],
+      "DescriptionCounter":0,
+      "Slug":"purple_box",
+      "AcceptItem":true,
+      "MenuInterface":"Basic",
+      "MenuCommands":["Examine","Open","Use"],
+      "ItemsRecieve": [0,1,-1],
+	  "ItemsLimit": [1,1,-1], 
+	  "ItemType":""
+   },
+   {
+      "ID":1,
+      "Title":"Mushroom",
+      "Description":["That's one big mushroom!", "For real, GIANT!", "I Shall Call you Shroomie", "Hey, Shroomie!"],
+      "DescriptionCounter":0,
+      "Slug":"mushroom",
+      "AcceptItem":true,
+      "MenuInterface":"Basic",
+      "MenuCommands":["Examine"],
+      "ItemsRecieve": [0,1,-1],
+	  "ItemsLimit": [1,1,-1], 
+	  "ItemType":"seed"
+
+   },
+   {
+      "ID":-1,
+      "Title":"No Box",
+      "Description":[""],
+      "DescriptionCounter":0,
+      "Slug":"no_box",
+      "AcceptItem":true,
+      "MenuInterface":"",
+      "MenuCommands":["","",""],
+      "ItemsRecieve": [0,1,-1],
+	  "ItemsLimit": [1,1,-1], 
+	  "ItemType":""
+   }
+]

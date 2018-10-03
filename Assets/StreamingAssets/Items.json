@@ -1,0 +1,44 @@
+[
+    {
+            "id":-1, 
+            "title":"No Item",
+            "value":0,
+            "description":"",
+            "slug":"",
+            "stackable": false,
+            "stackLimit": 0,
+            "type": ""
+        }, 
+        {
+            "id":0, 
+            "title":"Energy Bar",
+            "value": 5,
+            "description":"",
+            "slug":"energy_bar",
+            "stackable": true,
+            "stackLimit": 5,
+            "type": "Consumable"
+        }, 
+    
+        {
+            "id":1, 
+            "title":"Purple Cube",
+            "value": 20,
+            "description":"",
+            "slug":"purple_cube",
+            "stackable": false,
+            "stackLimit":0,
+            "type": "Quest" 
+        }, 
+    
+        {
+            "id":2, 
+            "title":"Basic Seed",
+            "value": 20,
+            "description":"",
+            "slug":"basic_seed",
+            "stackable": true,
+            "stackLimit":5,
+            "type": "Seed" 
+        }
+    ]    

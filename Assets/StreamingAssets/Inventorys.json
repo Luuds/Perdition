@@ -1,0 +1,21 @@
+[
+    { 	"ID":0,
+        "Title":"Main Inventory",
+        "ItemsAndSize": [1,1,2,0,0,0,-1,-1,-1,-1],
+        "ItemsAmount": [1,1,1,2,2,4,0,0,0,0],
+        "Slug":"main_inv"
+    },
+    { 	"ID":1,
+        "Title":"Purple Box",
+        "ItemsAndSize": [1,-1,-1,-1],
+        "ItemsAmount": [1,0,0,0],
+        "Slug":"purple_box"
+    } 	
+    
+    
+    
+    
+    
+    
+    
+    ]
