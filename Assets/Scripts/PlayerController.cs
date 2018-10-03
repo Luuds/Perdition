@@ -8,7 +8,7 @@ public enum OffMeshLinkMoveMethod {
    Parabola,
 }
 public class PlayerController : MonoBehaviour {
-	private float doubleClickTimeLimit = 0.25f;
+	//private float doubleClickTimeLimit = 0.25f;
 	public Camera cam;
 	public float jumpHeight; 
 	public float jumpDuration;
