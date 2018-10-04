@@ -43,7 +43,7 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 			playerText.MakePlayerSay(parentHotspot.Description,parentHotspot.DescriptionCounter);
 			if(parentHotspot.DescriptionCounter<parentHotspot.Description.Count-1){
 				parentHotspot.DescriptionCounter ++; 
-				Debug.Log(parentHotspot.DescriptionCounter.ToString()); 
+				
 			}  
 		
 			parentHotspotData.menuOpen = false;
@@ -58,7 +58,7 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 			parentHotspotData.menuOpen = false;
 			Destroy(gameObject.transform.parent.parent.gameObject);
 		}else if(parentHotspot.MenuCommands[buttonNumber] == "Use"){//Trigger event
-		
+			parentHotspotData.gameObject.SendMessage("Use");
 			parentHotspotData.menuOpen = false;
 			controll.menuOpen =false;
 			Destroy(gameObject.transform.parent.parent.gameObject);

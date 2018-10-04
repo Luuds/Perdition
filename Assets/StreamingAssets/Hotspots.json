@@ -7,7 +7,7 @@
       "Slug":"purple_box",
       "AcceptItem":true,
       "MenuInterface":"Basic",
-      "MenuCommands":["Examine","Open","Use"],
+      "MenuCommands":["Examine","Open"],
       "ItemsRecieve": [0,1,-1],
 	  "ItemsLimit": [1,1,-1], 
 	  "ItemType":""
@@ -27,16 +27,29 @@
 
    },
    {
+    "ID":2,
+    "Title":"Button Console",
+    "Description":["It's the fuse box console", "I kind of hate it"],
+    "DescriptionCounter":0,
+    "Slug":"button_console",
+    "AcceptItem":false,
+    "MenuInterface":"Basic",
+    "MenuCommands":["Examine","Use"],
+    "ItemsRecieve": [-1],
+    "ItemsLimit": [0], 
+    "ItemType":""
+    },
+   {
       "ID":-1,
       "Title":"No Box",
       "Description":[""],
       "DescriptionCounter":0,
       "Slug":"no_box",
-      "AcceptItem":true,
+      "AcceptItem":false,
       "MenuInterface":"",
       "MenuCommands":["","",""],
-      "ItemsRecieve": [0,1,-1],
-	  "ItemsLimit": [1,1,-1], 
+      "ItemsRecieve": [-1],
+	  "ItemsLimit": [0], 
 	  "ItemType":""
    }
 ]

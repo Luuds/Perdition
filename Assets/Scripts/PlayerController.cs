@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
 	public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
 	Gamecontroller controll; 
 	public string interactionName = ""; 
+	bool pressed; 
 	// Use this for initialization
 	IEnumerator Start () {
 		inv = GameObject.FindGameObjectWithTag("GameController").GetComponent<InventoryDatabase>(); 
@@ -92,16 +93,29 @@ public class PlayerController : MonoBehaviour {
 
 	private void SingleClick()
 	{}*/
+
+	private IEnumerator InputListener() 
+{
+    while(enabled)
+    { //Run as long as this is activ
+
+        if(Input.GetMouseButtonDown(0))
+           {pressed=true;}else{pressed=false;}
+
+        yield return null;
+    }
+}
 	void Update(){
-	 if(Input.GetMouseButtonDown(0)){	
+	 if( (Input.GetMouseButton(0))){	
 		Ray ray =Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit hit;
 		bool hotspotHit= false; 
 		if(Physics.Raycast (ray, out hit)){
-		if(hit.collider.gameObject.layer != LayerMask.NameToLayer("HotspotLayer")) {
-			hotspotHit=false;
-			}else{
-			hotspotHit=true; 
+		if(hit.collider.gameObject.layer == LayerMask.NameToLayer("HotspotLayer")) {
+			hotspotHit=true;
+		}
+		else{
+			hotspotHit = false; 	
 			}
 		}
 		if(!hotspotHit){

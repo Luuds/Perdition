@@ -16,7 +16,7 @@ public GameObject itemHeldObj = null;
 public GameObject slotSelect = null;
 int minutes= 30, hours=6, hiddenSeconds; 
 public Text counterText; 
-public bool menuOpen; 
+public bool menuOpen=false; 
 public bool slotClick; 
 InventoryDatabase inv ; 
 	// Use this for initialization
@@ -32,6 +32,7 @@ InventoryDatabase inv ;
 			inv = gameObject.GetComponent<InventoryDatabase>();
 			StartCoroutine ("timeMinutes");
 			StartCoroutine ("timeHiddenSeconds"); 
+			menuOpen=false; 
 	}
  
 	// Update is called once per frame
@@ -58,6 +59,7 @@ InventoryDatabase inv ;
 		if (minutes >=60){
 			StopCoroutine ("timeMinutes"); 
 			hours += 1; 
+			gameObject.SendMessage("CheckingHour",null);
 			minutes = 0; 
 			StartCoroutine ("timeMinutes"); 
 		}

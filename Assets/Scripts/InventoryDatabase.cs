@@ -13,9 +13,11 @@ public class InventoryDatabase : MonoBehaviour {
 	private GameObject inventoryItem; 
 	public bool invOpen_main_inv = false; 
 	ItemDatabase itemDatabase; 
+	Gamecontroller control; 
 	public List <GameObject> slots = new List <GameObject>(); 
 	void Start ()
-	{	inventoryPanelRef =  Resources.Load<GameObject> ("Prefab/main_inv");
+	{	control = GetComponent<Gamecontroller>(); 
+		inventoryPanelRef =  Resources.Load<GameObject> ("Prefab/main_inv");
 		inventorySlot = Resources.Load<GameObject> ("Prefab/Slot") ; 
 		inventoryItem = Resources.Load<GameObject> ("Prefab/Item") ;
 		itemDatabase = GetComponent<ItemDatabase>(); 
@@ -148,7 +150,11 @@ public class InventoryDatabase : MonoBehaviour {
 		
 			Destroy(GameObject.FindWithTag("Main Inventory")); 
 			slots.Clear();
-			invOpen_main_inv=false; 
+			invOpen_main_inv=false;
+			control.itemHeldbool=false;
+			control.itemHeldObj=null;
+			control.slotSelect = null; 
+		 
 		}
 	}
 

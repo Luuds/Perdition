@@ -67,12 +67,13 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 		
 	}
 	IEnumerator CreateMenu(){
-		yield return new WaitForSeconds(0.3f); 
-		if (hotspot.MenuInterface != "" && menuOpen== false&&pressed){
+		Vector3 mousePosition =Input.mousePosition;  
+		yield return new WaitForSeconds(0.15f); 
+		if (hotspot.MenuInterface != "" && menuOpen== false&&pressed&&controll.menuOpen == false){
 			menuOpen = true; 
 			controll.menuOpen = true; 
 			GameObject menuRef = Resources.Load<GameObject> ("Prefab/"+"Menu_"+hotspot.MenuInterface) ; 
-			GameObject menu = Instantiate(menuRef,this.transform.position,Quaternion.identity); 
+			GameObject menu = Instantiate(menuRef,mousePosition,Quaternion.identity); 
 			createdMenu = menu; 
 			menu.GetComponent<UIStayInPlace>().pos =Input.mousePosition;
 			menu.GetComponent<UIStayInPlace>().mouse = true; 
@@ -106,7 +107,7 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 		
 	}
 	public void OnPointerUp(PointerEventData eventData){
-		StopCoroutine(CreateMenu()); 
+
 		pressed = false; 
 		StartCoroutine(CreateMenu()); 
 		
@@ -122,7 +123,7 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 	}
 	public void OpenInventory()
 	{	int id = inv.FetchInventoryBySlug(hotspot.Slug).ID; 
-		if (menuOpen == false){
+		if (menuOpen == false&&controll.menuOpen==false){
 			inventoryPanelRef =Resources.Load<GameObject> ("Prefab/InvMenu_"+(inv.database[id].ItemsAndSize.Count).ToString()); 
 			GameObject inventoryPanel = Instantiate(inventoryPanelRef);
 			//RectTransform invPanelRect = inventoryPanel.GetComponent<RectTransform>(); 
@@ -163,6 +164,9 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 			slots.Clear();
 			menuOpen=false; 
 			controll.menuOpen =false;
+			controll.itemHeldbool=false;
+			controll.itemHeldObj=null;
+			controll.slotSelect = null; 
 		
 	}
 	void Update () {
