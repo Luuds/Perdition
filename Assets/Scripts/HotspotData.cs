@@ -68,7 +68,7 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 	}
 	IEnumerator CreateMenu(){
 		Vector3 mousePosition =Input.mousePosition;  
-		yield return new WaitForSeconds(0.15f); 
+		yield return new WaitForSeconds(0.08f); 
 		if (hotspot.MenuInterface != "" && menuOpen== false&&pressed&&controll.menuOpen == false){
 			menuOpen = true; 
 			controll.menuOpen = true; 
@@ -114,16 +114,17 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 	}
 	void OnTriggerStay(Collider other){
 	//this is the open command
-	if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Open"){
-	
+	if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Open"+hotspot.Slug){
+	// offending code here, green box did it Open is called on it but there is no inventory. 
 		OpenInventory(); 
 			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName = ""; 
 		}
 	//put other commands here 
 	}
 	public void OpenInventory()
-	{	int id = inv.FetchInventoryBySlug(hotspot.Slug).ID; 
+	{	
 		if (menuOpen == false&&controll.menuOpen==false){
+			int id = inv.FetchInventoryBySlug(hotspot.Slug).ID; 
 			inventoryPanelRef =Resources.Load<GameObject> ("Prefab/InvMenu_"+(inv.database[id].ItemsAndSize.Count).ToString()); 
 			GameObject inventoryPanel = Instantiate(inventoryPanelRef);
 			//RectTransform invPanelRect = inventoryPanel.GetComponent<RectTransform>(); 

@@ -1,0 +1,29 @@
+[
+   {
+      "ID":0,
+      "Flowchart":"Flowchart_1",
+      "Messages":["Hey!", "Hey2"],
+      "Counter":0,
+      "Slug":"mushroom",
+      "AcceptItem":true,
+      "MenuInterface":"Basic",
+      "MenuCommands":["Examine","Open"],
+      "ItemsRecieve": [0,1,-1],
+	  "ItemsLimit": [1,1,-1], 
+	  "Type":"Talk"
+   },
+   { "ID":1,
+    "Flowchart":"Purple Box",
+    "Messages":[""],
+    "Counter":0,
+    "Slug":"purple_box",
+    "AcceptItem":true,
+    "MenuInterface":"Basic",
+    "MenuCommands":["Examine","Open"],
+    "ItemsRecieve": [0,1,-1],
+    "ItemsLimit": [1,1,-1], 
+    "Type":"Talk"
+     
+
+   }
+]

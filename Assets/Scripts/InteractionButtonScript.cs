@@ -53,12 +53,18 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 			NavMeshHit hit; 
 			NavMesh.SamplePosition(parentHotspotData.transform.position,out hit,1f,-1); 
 			agent.SetDestination(hit.position); 
-			agent.gameObject.GetComponent<PlayerController>().interactionName = "Open";
+			agent.gameObject.GetComponent<PlayerController>().interactionName = "Open"+parentHotspot.Slug;
 			controll.menuOpen =false;
 			parentHotspotData.menuOpen = false;
 			Destroy(gameObject.transform.parent.parent.gameObject);
 		}else if(parentHotspot.MenuCommands[buttonNumber] == "Use"){//Trigger event
 			parentHotspotData.gameObject.SendMessage("Use");
+			parentHotspotData.menuOpen = false;
+			controll.menuOpen =false;
+			Destroy(gameObject.transform.parent.parent.gameObject);
+			//add more commands here and in hotspots
+		}else if(parentHotspot.MenuCommands[buttonNumber] == "Talk"){//Trigger event
+			parentHotspotData.gameObject.SendMessage("Talk");
 			parentHotspotData.menuOpen = false;
 			controll.menuOpen =false;
 			Destroy(gameObject.transform.parent.parent.gameObject);

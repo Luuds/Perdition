@@ -16,14 +16,19 @@ public class PlayerController : MonoBehaviour {
 	NavMeshAgent agent; 
 	public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
 	Gamecontroller controll; 
+	GameObject playerTextRef,playerText; 
 	public string interactionName = ""; 
-	bool pressed; 
 	// Use this for initialization
 	IEnumerator Start () {
 		inv = GameObject.FindGameObjectWithTag("GameController").GetComponent<InventoryDatabase>(); 
 		controll = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gamecontroller>(); 
 		cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); 
 		agent = GameObject.FindGameObjectWithTag("Player").GetComponent<NavMeshAgent>();
+		playerTextRef = Resources.Load<GameObject>("Prefab/Player_Text");
+		playerText = Instantiate(playerTextRef);
+		playerText.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform, false);
+		playerText.transform.localScale = Vector3.one; 
+
 		//StartCoroutine(InputListener());
 		agent.autoTraverseOffMeshLink = false;
      while (true) {
@@ -93,18 +98,6 @@ public class PlayerController : MonoBehaviour {
 
 	private void SingleClick()
 	{}*/
-
-	private IEnumerator InputListener() 
-{
-    while(enabled)
-    { //Run as long as this is activ
-
-        if(Input.GetMouseButtonDown(0))
-           {pressed=true;}else{pressed=false;}
-
-        yield return null;
-    }
-}
 	void Update(){
 	 if( (Input.GetMouseButton(0))){	
 		Ray ray =Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -150,7 +143,9 @@ public class PlayerController : MonoBehaviour {
 	}
 	}
 	}
-
+	void OnDestroy(){
+		Destroy(playerText); 
+	}
 	private void DoubleClick()
 	
 	{	

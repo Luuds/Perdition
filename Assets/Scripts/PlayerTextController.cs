@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; 
+using UnityEngine.SceneManagement; 
 public class PlayerTextController : MonoBehaviour {
 	GameObject player ;
 	Text text;
@@ -15,6 +16,7 @@ public class PlayerTextController : MonoBehaviour {
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player"); 
 		text = GetComponent<Text>(); 
+	
 	}
 	public void MakePlayerSay(List <string> descriptions, int curDesc){
 	if(!ongoing){

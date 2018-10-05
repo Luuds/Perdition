@@ -21,6 +21,7 @@ public bool slotClick;
 InventoryDatabase inv ; 
 	// Use this for initialization
 		void Awake () {
+		SceneManager.sceneLoaded += OnSceneLoaded;
 		if (control == null) {
 			DontDestroyOnLoad (gameObject);
 			control = this; 
@@ -28,13 +29,19 @@ InventoryDatabase inv ;
 			Destroy (gameObject); 
 		}
 	}
+	 	 void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded: " + scene.name);
+        Debug.Log(mode);
+    }
+
 	void Start (){
 			inv = gameObject.GetComponent<InventoryDatabase>();
 			StartCoroutine ("timeMinutes");
 			StartCoroutine ("timeHiddenSeconds"); 
 			menuOpen=false; 
 	}
- 
+
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.A)){

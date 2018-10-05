@@ -19,12 +19,12 @@ public class UseBaseConsole : MonoBehaviour {
 			NavMeshHit hit; 
 			NavMesh.SamplePosition(parentHotspotData.transform.position,out hit,1f,-1); 
 			agent.SetDestination(hit.position); 
-			agent.gameObject.GetComponent<PlayerController>().interactionName = "Use";
+			agent.gameObject.GetComponent<PlayerController>().interactionName = "Use"+parentHotspotData.hotspot.Slug;
 			controll.menuOpen =false;
 	
 	}
 	void OnTriggerStay(Collider other){
-		if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Use"){
+		if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Use"+parentHotspotData.hotspot.Slug){
 			if(parentHotspotData.hotspot.Slug== "button_console"){
 			menuInst= Resources.Load<GameObject> ("Prefab/BaseButtonsPanel") ;
 			menu = Instantiate(menuInst,Vector3.zero,Quaternion.identity); 
