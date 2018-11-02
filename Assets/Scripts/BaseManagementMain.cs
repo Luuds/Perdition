@@ -9,7 +9,8 @@ public class BaseManagementMain : MonoBehaviour {
 	int buttonCalc, minuteAmount; 
 	int buttonNumber=10;
 	public Text effText; 
-	float currentEff,dispEff,buttonEff; 
+	public int circleRadius; 
+	float currentEff,dispEff,efficiance,stabilizerEff; 
 	// Use this for initialization
 	void Start () {
 		CreateButtons(buttonNumber); 
@@ -22,6 +23,7 @@ public class BaseManagementMain : MonoBehaviour {
 			
 		}
 	}
+
 	public void CheckingTime(){
 	 
 		for(int i = 0; i<buttonNumber;i++){
@@ -31,10 +33,10 @@ public class BaseManagementMain : MonoBehaviour {
 				activeButtons[i] = false; 
 		
 			}
-			//Debug.Log (activeButtons[i].ToString());
+		
 		}
 		}
-		//Debug.Log ("Gay");
+
 		for (int i = 0; i < buttonNumber; i++){
 			if(activeButtons[i]==true){
 				buttonCalc++; 
@@ -44,9 +46,10 @@ public class BaseManagementMain : MonoBehaviour {
 			
 		}
 		minuteAmount++;
-		buttonEff= ((((float)buttonCalc/(float)minuteAmount)*2f)+20f)/100f;
-		
+		efficiance= ((((float)buttonCalc/(float)minuteAmount)*2f)+20f)/100f;
+		//Debug.Log(buttonEff); 
 	}
+
 	public void CheckingHour(){
 
 	}
