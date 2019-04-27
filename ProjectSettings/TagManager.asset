@@ -10,6 +10,8 @@ TagManager:
   - Slot
   - Main Inventory
   - Player Text
+  - Player Image
+  - Description Menu
   layers:
   - Default
   - TransparentFX
@@ -46,4 +48,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2875394171
+    locked: 0
+  - name: Player
+    uniqueID: 2175501211
+    locked: 0
+  - name: Background Shit
+    uniqueID: 142755667
+    locked: 0
+  - name: Foreground
+    uniqueID: 2760695649
     locked: 0

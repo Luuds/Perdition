@@ -45,7 +45,7 @@ public class PlayerTextController : MonoBehaviour {
 	 fade= true; 
  }
  void FixedUpdate(){
-	 transform.position = Camera.main.WorldToScreenPoint (player.transform.position) + new Vector3(0,150,0);
+	 transform.position = Camera.main.WorldToScreenPoint (player.transform.position) + new Vector3(0,350,0);
 	 if(fade){
 
 		t += 0.65f * Time.deltaTime;

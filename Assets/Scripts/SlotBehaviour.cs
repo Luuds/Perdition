@@ -7,14 +7,16 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 	public int invID; 
 	public int slotID; 
 	InventoryDatabase inv; 
-	GameObject moveClickItem; 
+	
+    GameObject desc_Menu; 
 	//ItemDatabase itemDatabase;
 	Gamecontroller control; 
     void Start()
     {	inv = GameObject.FindGameObjectWithTag ("GameController").GetComponent<InventoryDatabase>();
 		//itemDatabase = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ItemDatabase>(); 
-		control = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gamecontroller>(); 
-	}
+		control = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gamecontroller>();
+        desc_Menu = Resources.Load<GameObject>("Prefab/Menu_Description");
+    }
 	public void OnDrop (PointerEventData eventData)
 	{	
 		ItemData droppedItem = eventData.pointerDrag.GetComponent<ItemData> ();
@@ -80,15 +82,22 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 		}
 		 }
 	public void OnPointerClick (PointerEventData eventData)
-	{		
+	{
+        Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
 	if(control.itemHeldbool==false){
 			if(this.transform.childCount > 0){
 			GameObject childItem = this.transform.GetChild(0).gameObject; 
 			control.itemHeldObj = childItem; 
 			control.itemHeldbool = true; 
 			control.slotSelect = this.gameObject; 
-			this.gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotActive"); ; 
-			}
+			this.gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotActive");
+
+                GameObject menuObj = Instantiate(desc_Menu);
+                menuObj.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform);
+                menuObj.transform.position = transform.position + new Vector3(-170, 0);
+                menuObj.transform.localScale = Vector3.one;
+                menuObj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = childItem.GetComponent<ItemData>().itemData.Description; 
+            }
 		}
 	if(control.itemHeldbool==true && control.slotSelect!=this.gameObject){
 			if(this.transform.childCount >0){
@@ -106,7 +115,8 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 							Destroy(control.itemHeldObj);
 							control.itemHeldObj = null; 
 							control.itemHeldbool=false;
-							control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+                        Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                        control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 							control.slotSelect =null; 
 					} else{
 						control.itemHeldObj.GetComponent<ItemData>().itemAmount--; 
@@ -118,7 +128,8 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 						}
 						control.itemHeldObj = null; 
 						control.itemHeldbool=false;
-						control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+                        Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                        control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 						control.slotSelect =null; 
 					}
 				 
@@ -133,7 +144,8 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 				inv.database[invID].ItemsAmount[slotID] = control.itemHeldObj.GetComponent<ItemData>().itemAmount; 
 				inv.database[control.slotSelect.GetComponent<SlotBehaviour>().invID].ItemsAmount[control.slotSelect.GetComponent<SlotBehaviour>().slotID] = 
 				childItem.GetComponent<ItemData>().itemAmount;
-				control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+                    Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                    control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 				control.itemHeldObj = null; 
 				control.itemHeldbool=false;
 				control.slotSelect =null; 
@@ -156,7 +168,8 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 							}else{
 							control.itemHeldObj.transform.GetChild(0).GetComponent<Text>().text =control.itemHeldObj.GetComponent<ItemData>().itemAmount.ToString();  
 							}
-							control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+                    Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                    control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 							control.itemHeldObj = null; 
 							control.itemHeldbool=false;
 							control.slotSelect =null; 
@@ -166,7 +179,8 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 			inv.database[control.slotSelect.GetComponent<SlotBehaviour>().invID].ItemsAndSize[control.slotSelect.GetComponent<SlotBehaviour>().slotID] = -1; 
 			inv.database[invID].ItemsAmount[slotID] = control.itemHeldObj.GetComponent<ItemData>().itemAmount; 
 			inv.database[control.slotSelect.GetComponent<SlotBehaviour>().invID].ItemsAmount[control.slotSelect.GetComponent<SlotBehaviour>().slotID] = 0;
-			control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+                    Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                    control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 			control.itemHeldObj = null; 
 			control.itemHeldbool=false;
 			control.slotSelect =null; 

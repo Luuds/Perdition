@@ -14,13 +14,15 @@ public bool itemDraggedbool = false;
 public ItemData itemDraggedData = null; 
 public GameObject itemHeldObj = null; 
 public GameObject slotSelect = null;
-int minutes= 30, hours=6, hiddenSeconds; 
+int minutes= 00, hours=6, hiddenSeconds; 
 public Text counterText; 
 public bool menuOpen=false; 
-public bool slotClick; 
-InventoryDatabase inv ; 
-	// Use this for initialization
-		void Awake () {
+public bool pause = false; 
+InventoryDatabase inv;
+JsonData inventoryDataJson;
+public List<Inventory> invDatabase = new List<Inventory>();
+    // Use this for initialization
+    void Awake () {
 		SceneManager.sceneLoaded += OnSceneLoaded;
 		if (control == null) {
 			DontDestroyOnLoad (gameObject);
@@ -31,8 +33,9 @@ InventoryDatabase inv ;
 	}
 	 	 void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Scene oldScene = scene; 
         Debug.Log("OnSceneLoaded: " + scene.name);
-        Debug.Log(mode);
+        //Debug.Log(mode);
     }
 
 	void Start (){
@@ -41,9 +44,92 @@ InventoryDatabase inv ;
 			StartCoroutine ("timeHiddenSeconds"); 
 			menuOpen=false; 
 	}
-
-	// Update is called once per frame
-	void Update () {
+   
+    public void Save1()
+    {
+        inventoryDataJson = JsonMapper.ToJson(inv.database);
+        File.WriteAllText(Application.dataPath + "/StreamingAssets/SaveFiles/InventorySave1.json", inventoryDataJson.ToString());
+    }
+    public void Load1() {
+        inventoryDataJson = JsonMapper.ToObject(File.ReadAllText(Application.dataPath + "/StreamingAssets/SaveFiles/InventorySave1.json"));
+        invDatabase.Clear(); 
+        ConstructInventoryDatabase();
+        if (invDatabase.Count > 0)
+        {
+            inv.database = invDatabase;
+            foreach (Inventory inv in GetComponent<InventoryDatabase>().database)
+            {
+                Debug.Log(inv.ItemsAndSize.Count);
+            }
+        }
+        else { invDatabase.Clear();
+            Debug.Log("Can't Load"); 
+                }
+    }
+    public void Save2()
+    {
+        inventoryDataJson = JsonMapper.ToJson(inv.database);
+        File.WriteAllText(Application.dataPath + "/StreamingAssets/SaveFiles/InventorySave2.json", inventoryDataJson.ToString());
+    }
+    public void Load2()
+    {
+        inventoryDataJson = JsonMapper.ToObject(File.ReadAllText(Application.dataPath + "/StreamingAssets/SaveFiles/InventorySave2.json"));
+        invDatabase.Clear();
+        ConstructInventoryDatabase();
+        if (invDatabase.Count > 0)
+        {
+            inv.database = invDatabase;
+            foreach (Inventory inv in GetComponent<InventoryDatabase>().database)
+            {
+                Debug.Log(inv.ItemsAndSize.Count);
+            }
+        }
+        else
+        {
+            invDatabase.Clear();
+            Debug.Log("Can't Load");
+        }
+    }
+    public void Save3()
+    {
+        inventoryDataJson = JsonMapper.ToJson(inv.database);
+        File.WriteAllText(Application.dataPath + "/StreamingAssets/SaveFiles/InventorySave3.json", inventoryDataJson.ToString());
+    }
+    public void Load3()
+    {
+        inventoryDataJson = JsonMapper.ToObject(File.ReadAllText(Application.dataPath + "/StreamingAssets/SaveFiles/InventorySave3.json"));
+        invDatabase.Clear();
+        ConstructInventoryDatabase();
+        if (invDatabase.Count > 0)
+        {
+            inv.database = invDatabase;
+            foreach (Inventory inv in GetComponent<InventoryDatabase>().database)
+            {
+                Debug.Log(inv.ItemsAndSize.Count);
+            }
+        }
+        else
+        {
+            invDatabase.Clear();
+            Debug.Log("Can't Load");
+        }
+    }
+    void ConstructInventoryDatabase()
+    {
+        for (int i = 0; i < inventoryDataJson.Count; i++)
+        {
+            List<int> itemsAndSize = new List<int>();
+            List<int> itemsAmount = new List<int>();
+            for (int k = 0; k < inventoryDataJson[i]["ItemsAndSize"].Count; k++)
+            {
+                itemsAndSize.Add((int)inventoryDataJson[i]["ItemsAndSize"][k]);
+                itemsAmount.Add((int)inventoryDataJson[i]["ItemsAmount"][k]);
+            }
+            invDatabase.Add(new Inventory((int)inventoryDataJson[i]["ID"], inventoryDataJson[i]["Title"].ToString(), itemsAndSize, itemsAmount, inventoryDataJson[i]["Slug"].ToString()));
+        }
+    }
+    // Update is called once per frame
+    void Update () {
 		if(Input.GetKeyDown(KeyCode.A)){
 			
 			Debug.Log(inv.database[0].ItemsAndSize[0].ToString() +inv.database[0].ItemsAndSize[1].ToString()+ 
@@ -88,8 +174,9 @@ InventoryDatabase inv ;
 	
 	 yield return new WaitForSeconds(0.1f);
 	 if(slotSelect != null){
-		slotSelect.GetComponent<Image>().sprite= Resources.Load<Sprite> ("UI/SlotInactive"); 
-		itemHeldObj=null;
+		slotSelect.GetComponent<Image>().sprite= Resources.Load<Sprite> ("UI/SlotInactive");
+            Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+            itemHeldObj =null;
 		slotSelect=null;
 		itemHeldbool=false;
 	 }
@@ -105,7 +192,7 @@ InventoryDatabase inv ;
 	}
 	IEnumerator timeHiddenSeconds()
 	{
-		while (true) {
+		while (true ) {
 			yield return new WaitForSeconds (1); 
 			hiddenSeconds +=1;
 		}

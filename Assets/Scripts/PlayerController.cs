@@ -27,7 +27,8 @@ public class PlayerController : MonoBehaviour {
 		playerTextRef = Resources.Load<GameObject>("Prefab/Player_Text");
 		playerText = Instantiate(playerTextRef);
 		playerText.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform, false);
-		playerText.transform.localScale = Vector3.one; 
+        //playerText.transform.localPosition = new Vector3(0, 200,0);
+        playerText.transform.localScale = Vector3.one; 
 
 		//StartCoroutine(InputListener());
 		agent.autoTraverseOffMeshLink = false;
@@ -65,84 +66,94 @@ public class PlayerController : MonoBehaviour {
        yield return null;
      }
    }
-/*
-	private IEnumerator InputListener() 
-{
-    while(enabled)
-    { //Run as long as this is activ
-
-        if(Input.GetMouseButtonDown(0))
-            yield return ClickEvent();
-
-        yield return null;
-    }
-}
-	private IEnumerator ClickEvent()
-{
-    //pause a frame so you don't pick up the same mouse down event.
-    yield return new WaitForEndOfFrame();
-
-    float count = 0f;
-    while(count < doubleClickTimeLimit)
+    /*
+        private IEnumerator InputListener() 
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            DoubleClick();
-            yield break;
-        }
-        count += Time.deltaTime;// increment counter by change in time between frames
-        yield return null; // wait for the next frame
-    }
-   SingleClick();
-	}
+        while(enabled)
+        { //Run as long as this is activ
 
-	private void SingleClick()
-	{}*/
-	void Update(){
-	 if( (Input.GetMouseButton(0))){	
-		Ray ray =Camera.main.ScreenPointToRay (Input.mousePosition);
-		RaycastHit hit;
-		bool hotspotHit= false; 
-		if(Physics.Raycast (ray, out hit)){
-		if(hit.collider.gameObject.layer == LayerMask.NameToLayer("HotspotLayer")) {
-			hotspotHit=true;
-		}
-		else{
-			hotspotHit = false; 	
-			}
-		}
-		if(!hotspotHit){
-		interactionName=""; 	
-		if((!inv.invOpen_main_inv&&!controll.menuOpen)&&(!controll.menuOpen||!inv.invOpen_main_inv)){ //no menu should be open; 
-			NavMeshHit myHit;
-			NavMeshHit myHit1;
-			NavMeshHit myHit2;
-			Vector3 positionOnNavMesh =  new Vector3 (cam.ScreenToWorldPoint(Input.mousePosition).x, cam.ScreenToWorldPoint(Input.mousePosition).y, 0f );
-			Vector3 positionOnNavMeshPlus = new Vector3 (cam.ScreenToWorldPoint(Input.mousePosition).x, cam.ScreenToWorldPoint(Input.mousePosition).y, 0.2f );  
-			Vector3 positionOnNavMeshMinus = new Vector3 (cam.ScreenToWorldPoint(Input.mousePosition).x, cam.ScreenToWorldPoint(Input.mousePosition).y, -0.2f );
-			NavMesh.SamplePosition(positionOnNavMeshPlus,out myHit1, 6f, -1);
-			NavMesh.SamplePosition(positionOnNavMeshMinus,out myHit2, 6f, -1);
-			NavMesh.SamplePosition(positionOnNavMesh,out myHit, 6f, -1);
-			if (Vector3.Distance(myHit1.position, positionOnNavMeshPlus)<Vector3.Distance(myHit2.position,positionOnNavMeshMinus))
-			{	
-				Vector3 positionNew = new Vector3 (myHit1.position.x,myHit1.position.y, myHit1.position.z);
-				agent.SetDestination( positionNew); 
-			
-			}
-			else if (Vector3.Distance(myHit1.position, positionOnNavMeshPlus)>Vector3.Distance(myHit2.position,positionOnNavMeshMinus))
-			{	
-				Vector3 positionNew = new Vector3 (myHit2.position.x,myHit2.position.y, myHit2.position.z);
-				agent.SetDestination( positionNew); 
-			
-			} else{
-				Vector3 positionNew = new Vector3 (myHit.position.x,myHit.position.y, myHit.position.z);
-				agent.SetDestination( positionNew); 
-				
-			}
-  		}
-	}
-	}
-	}
+            if(Input.GetMouseButtonDown(0))
+                yield return ClickEvent();
+
+            yield return null;
+        }
+    }
+        private IEnumerator ClickEvent()
+    {
+        //pause a frame so you don't pick up the same mouse down event.
+        yield return new WaitForEndOfFrame();
+
+        float count = 0f;
+        while(count < doubleClickTimeLimit)
+        {
+            if(Input.GetMouseButtonDown(0))
+            {
+                DoubleClick();
+                yield break;
+            }
+            count += Time.deltaTime;// increment counter by change in time between frames
+            yield return null; // wait for the next frame
+        }
+       SingleClick();
+        }
+
+        private void SingleClick()
+        {}*/
+    void FixedUpdate()
+    {
+        if ((Input.GetMouseButton(0)))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            bool hotspotHit = false;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("HotspotLayer"))
+                {
+                    hotspotHit = true;
+                }
+                else
+                {
+                    hotspotHit = false;
+                }
+            }
+            if (!hotspotHit)
+            {
+                interactionName = "";
+
+                if ((!inv.invOpen_main_inv && !controll.menuOpen) && (!controll.menuOpen || !inv.invOpen_main_inv))
+                { //no menu should be open; 
+                    NavMeshHit myHit;
+                    NavMeshHit myHit1;
+                    NavMeshHit myHit2;
+                    Vector3 positionOnNavMesh = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, 0f, cam.ScreenToWorldPoint(Input.mousePosition).z);
+                    Vector3 positionOnNavMeshPlus = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, 0f, cam.ScreenToWorldPoint(Input.mousePosition).z);
+                    Vector3 positionOnNavMeshMinus = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, 0f, cam.ScreenToWorldPoint(Input.mousePosition).z);
+                    NavMesh.SamplePosition(positionOnNavMeshPlus, out myHit1, 6f, -1);
+                    NavMesh.SamplePosition(positionOnNavMeshMinus, out myHit2, 6f, -1);
+                    NavMesh.SamplePosition(positionOnNavMesh, out myHit, 6f, -1);
+                    if (Vector3.Distance(myHit1.position, positionOnNavMeshPlus) < Vector3.Distance(myHit2.position, positionOnNavMeshMinus))
+                    {
+                        Vector3 positionNew = new Vector3(myHit1.position.x, myHit1.position.y, myHit1.position.z);
+                        agent.SetDestination(positionNew);
+
+                    }
+                    else if (Vector3.Distance(myHit1.position, positionOnNavMeshPlus) > Vector3.Distance(myHit2.position, positionOnNavMeshMinus))
+                    {
+                        Vector3 positionNew = new Vector3(myHit2.position.x, myHit2.position.y, myHit2.position.z);
+                        agent.SetDestination(positionNew);
+
+                    }
+                    else
+                    {
+                        Vector3 positionNew = new Vector3(myHit.position.x, myHit.position.y, myHit.position.z);
+                        agent.SetDestination(positionNew);
+
+                    }
+                }
+            }
+        }
+    }
 	void OnDestroy(){
 		Destroy(playerText); 
 	}

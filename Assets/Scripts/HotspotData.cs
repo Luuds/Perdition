@@ -60,6 +60,7 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 							}
 						}}}}
 						//Debug.Log(hotspot.ItemsLimit[1].ToString());
+                        // it's in this method you should put the trigger for your object dropp ie what happens when the object accepts shit. Make a new script that can recieve a send message from here. 
 						}}
 
 	

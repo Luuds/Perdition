@@ -10,6 +10,7 @@ public class TalkBehaviour : MonoBehaviour {
 	NavMeshAgent agent; 
 	Gamecontroller controll; 
 	EventandTalkDatabase database; 
+    public Transform talkpoint;
 	public bool triggered = false;  
 	GameObject objFlowchart;
 	Flowchart flowchart; 
@@ -33,14 +34,16 @@ public class TalkBehaviour : MonoBehaviour {
 			controll.menuOpen =false;
 			
 	}
-
+	public void Close(){
+		controll.menuOpen = false;
+	}
 	void Update () {
 		if(triggered){
 		 Debug.Log("Talk to Shroomie"); 
 		
 			DialogueCounter();   
 			
-			//controll.menuOpen =true;
+			controll.menuOpen =true;
 			triggered= false;
 	
 			}

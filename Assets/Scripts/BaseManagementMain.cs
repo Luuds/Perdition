@@ -9,14 +9,15 @@ public class BaseManagementMain : MonoBehaviour {
 	int buttonCalc, minuteAmount; 
 	int buttonNumber=10;
 	public Text effText; 
-	public int circleRadius; 
+	public int circleRadius;
 	float currentEff,dispEff,efficiance,stabilizerEff; 
 	// Use this for initialization
 	void Start () {
 		CreateButtons(buttonNumber); 
 		
 	}
-	void CreateButtons(int buttonNumber){
+
+    void CreateButtons(int buttonNumber){
 		for(int i = 0; i<buttonNumber;i++){
 			buttons.Add(i);
 			activeButtons.Add(true);

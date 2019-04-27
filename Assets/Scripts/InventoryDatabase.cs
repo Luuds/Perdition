@@ -148,8 +148,9 @@ public class InventoryDatabase : MonoBehaviour {
 			invOpen_main_inv = true; 
 		}else{
 		
-			Destroy(GameObject.FindWithTag("Main Inventory")); 
-			slots.Clear();
+			Destroy(GameObject.FindWithTag("Main Inventory"));
+            Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+            slots.Clear();
 			invOpen_main_inv=false;
 			control.itemHeldbool=false;
 			control.itemHeldObj=null;
@@ -158,7 +159,7 @@ public class InventoryDatabase : MonoBehaviour {
 		}
 	}
 
-	// add item instantiation save and load here
+	// add item instantiation save and load here ????
 	public Inventory FetchInventoryByTitle(string title){
 	
 		for (int i = 0; i < database.Count; i++) 

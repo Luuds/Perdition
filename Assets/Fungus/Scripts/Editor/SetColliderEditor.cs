@@ -14,7 +14,9 @@ namespace Fungus.EditorUtils
         protected SerializedProperty targetTagProp;
         protected SerializedProperty activeStateProp;
 
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         protected virtual void OnEnable()
+#pragma warning restore CS0114 // Member hides inherited member; missing override keyword
         {
             if (NullTargetCheck()) // Check for an orphaned editor instance
                 return;
