@@ -1,0 +1,167 @@
+
+NewStyleCitizen.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BootL
+  rotate: true
+  xy: 1548, 70
+  size: 151, 193
+  orig: 151, 193
+  offset: 0, 0
+  index: -1
+BootR
+  rotate: true
+  xy: 1578, 223
+  size: 157, 199
+  orig: 157, 199
+  offset: 0, 0
+  index: -1
+BrowL
+  rotate: true
+  xy: 1309, 226
+  size: 27, 15
+  orig: 27, 15
+  offset: 0, 0
+  index: -1
+BrowR
+  rotate: true
+  xy: 1983, 435
+  size: 66, 26
+  orig: 66, 26
+  offset: 0, 0
+  index: -1
+EyeL
+  rotate: false
+  xy: 704, 169
+  size: 18, 21
+  orig: 18, 21
+  offset: 0, 0
+  index: -1
+EyeR
+  rotate: true
+  xy: 1024, 123
+  size: 36, 21
+  orig: 36, 21
+  offset: 0, 0
+  index: -1
+GloveL
+  rotate: true
+  xy: 1309, 100
+  size: 122, 237
+  orig: 122, 237
+  offset: 0, 0
+  index: -1
+GloveR
+  rotate: true
+  xy: 1056, 110
+  size: 143, 251
+  orig: 143, 251
+  offset: 0, 0
+  index: -1
+Head
+  rotate: false
+  xy: 1779, 207
+  size: 191, 226
+  orig: 191, 226
+  offset: 0, 0
+  index: -1
+Mouth
+  rotate: false
+  xy: 444, 12
+  size: 50, 38
+  orig: 50, 38
+  offset: 0, 0
+  index: -1
+NEck
+  rotate: true
+  xy: 1326, 224
+  size: 156, 250
+  orig: 156, 250
+  offset: 0, 0
+  index: -1
+Nose
+  rotate: true
+  xy: 354, 9
+  size: 41, 88
+  orig: 41, 88
+  offset: 0, 0
+  index: -1
+PupL
+  rotate: false
+  xy: 1743, 208
+  size: 11, 13
+  orig: 11, 13
+  offset: 0, 0
+  index: -1
+PupR
+  rotate: false
+  xy: 1972, 418
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+ShinL
+  rotate: true
+  xy: 1435, 435
+  size: 66, 546
+  orig: 66, 546
+  offset: 0, 0
+  index: -1
+ShinR
+  rotate: true
+  xy: 730, 255
+  size: 126, 594
+  orig: 126, 594
+  offset: 0, 0
+  index: -1
+ThighL
+  rotate: true
+  xy: 730, 383
+  size: 118, 703
+  orig: 118, 703
+  offset: 0, 0
+  index: -1
+ThighR
+  rotate: true
+  xy: 2, 52
+  size: 138, 700
+  orig: 138, 700
+  offset: 0, 0
+  index: -1
+Torso
+  rotate: true
+  xy: 2, 192
+  size: 309, 726
+  orig: 309, 726
+  offset: 0, 0
+  index: -1
+UndArmL
+  rotate: true
+  xy: 1435, 382
+  size: 51, 331
+  orig: 51, 331
+  offset: 0, 0
+  index: -1
+UndArmR
+  rotate: true
+  xy: 2, 2
+  size: 48, 350
+  orig: 48, 350
+  offset: 0, 0
+  index: -1
+UpArmL
+  rotate: true
+  xy: 730, 161
+  size: 92, 324
+  orig: 92, 324
+  offset: 0, 0
+  index: -1
+UpperArmR
+  rotate: true
+  xy: 704, 45
+  size: 114, 318
+  orig: 114, 318
+  offset: 0, 0
+  index: -1

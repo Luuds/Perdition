@@ -8,8 +8,8 @@
       "AcceptItem":true,
       "MenuInterface":"Basic",
       "MenuCommands":["Examine","Open"],
-      "ItemsRecieve": [0,1,-1],
-	  "ItemsLimit": [1,1,-1], 
+      "ItemsRecieve": [0,1],
+	  "ItemsLimit": [1,1], 
 	  "ItemType":""
    },
    {
@@ -22,8 +22,8 @@
       "MenuInterface":"Basic",
       "MenuCommands":["Examine", "Talk"],
       "ItemsRecieve": [0,1,-1],
-	  "ItemsLimit": [1,1,-1], 
-	  "ItemType":"seed"
+	    "ItemsLimit": [1,1,-1], 
+	    "ItemType":"seed"
 
    },
    {

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; 
 using UnityEngine.AI;
-using UnityEngine.EventSystems; 
+using UnityEngine.EventSystems;
+using Spine.Unity; 
 public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler {
 	public Hotspot parentHotspot;
 	Button button; 
@@ -37,9 +38,18 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 			
 	if(pointerOver){
 		if(Input.GetMouseButtonUp(0)){
-		
-			if(parentHotspot.MenuCommands[buttonNumber] == "Examine"){
-			PlayerTextController playerText = GameObject.FindGameObjectWithTag("Player Text").GetComponent<PlayerTextController>(); 
+                if (GameObject.Find(parentHotspot.Slug).transform.position.x < agent.transform.position.x)
+                {
+                    GameObject.FindGameObjectWithTag("Player Image").GetComponent<SkeletonMecanim>().skeleton.ScaleX = -1;
+
+                }
+                else {
+                    GameObject.FindGameObjectWithTag("Player Image").GetComponent<SkeletonMecanim>().skeleton.ScaleX = 1;
+                }
+
+            if (parentHotspot.MenuCommands[buttonNumber] == "Examine"){
+            
+            PlayerTextController playerText = GameObject.FindGameObjectWithTag("Player Text").GetComponent<PlayerTextController>(); 
 			playerText.MakePlayerSay(parentHotspot.Description,parentHotspot.DescriptionCounter);
 			if(parentHotspot.DescriptionCounter<parentHotspot.Description.Count-1){
 				parentHotspot.DescriptionCounter ++; 

@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI; 
+using UnityEngine.AI;
+using Spine.Unity;
 
 public enum OffMeshLinkMoveMethod {
    Teleport,
    Parabola,
+   Curve,
 }
 public class PlayerController : MonoBehaviour {
 	//private float doubleClickTimeLimit = 0.25f;
@@ -17,9 +19,9 @@ public class PlayerController : MonoBehaviour {
 	public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
 	Gamecontroller controll; 
 	GameObject playerTextRef,playerText; 
-	public string interactionName = ""; 
-	// Use this for initialization
-	IEnumerator Start () {
+	public string interactionName = "";
+    Animator anim;
+    IEnumerator Start () {
 		inv = GameObject.FindGameObjectWithTag("GameController").GetComponent<InventoryDatabase>(); 
 		controll = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gamecontroller>(); 
 		cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); 
@@ -28,77 +30,71 @@ public class PlayerController : MonoBehaviour {
 		playerText = Instantiate(playerTextRef);
 		playerText.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform, false);
         //playerText.transform.localPosition = new Vector3(0, 200,0);
-        playerText.transform.localScale = Vector3.one; 
-
-		//StartCoroutine(InputListener());
-		agent.autoTraverseOffMeshLink = false;
+        playerText.transform.localScale = Vector3.one;
+        anim = GameObject.FindGameObjectWithTag("Player Image").GetComponent<Animator>();
+        //StartCoroutine(InputListener());
+        agent.autoTraverseOffMeshLink = false;
      while (true) {
        if (agent.isOnOffMeshLink) {
-         if (method == OffMeshLinkMoveMethod.Parabola)
-           yield return StartCoroutine (Parabola (agent, jumpHeight,jumpDuration));
-         agent.CompleteOffMeshLink ();
-       }
+                Vector3 startPos = agent.transform.position;
+                OffMeshLinkData data = agent.currentOffMeshLinkData;
+                Vector3 endPos = data.endPos + Vector3.forward * agent.baseOffset;
+                if (endPos.x > startPos.x)
+                {
+                    anim.transform.gameObject.GetComponent<SkeletonMecanim>().Skeleton.ScaleX = 1;
+                }
+                else { anim.transform.gameObject.GetComponent<SkeletonMecanim>().Skeleton.ScaleX = -1; }
+
+                if (method == OffMeshLinkMoveMethod.Parabola)
+                anim.SetBool("Stop",true);
+                anim.SetBool("Jump",true);
+               
+                yield return new WaitForSeconds(0.5f);
+                anim.SetBool("Jump", false);
+                yield return StartCoroutine (Parabola (agent, jumpHeight,jumpDuration));
+                anim.SetBool("Land", true);
+               // anim.SetBool("Stop", false);
+                yield return new WaitForSeconds(0.1f);
+                agent.CompleteOffMeshLink ();
+                anim.SetBool("Land", false);
+
+
+            }
        yield return null;
      }
 	 
-	}  
-	 IEnumerator Parabola (NavMeshAgent agent, float height, float duration) {
+	}
+
+    IEnumerator Parabola (NavMeshAgent agent, float height, float duration) {
      OffMeshLinkData data = agent.currentOffMeshLinkData;
      Vector3 startPos = agent.transform.position;
-     Vector3 endPos = data.endPos + Vector3.up*agent.baseOffset;
+     Vector3 endPos = data.endPos + Vector3.forward*agent.baseOffset;
      float normalizedTime = 0.0f;
-     while (normalizedTime < 1.0f) {
-		 if(startPos.y+1 < endPos.y){
-			float yOffset = (height*0.9f) * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-       		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
- 			normalizedTime += Time.deltaTime / (duration+0.1f);
-	   } else if (startPos.y> endPos.y+1){
-		    float yOffset = height * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-       		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-		  	normalizedTime += Time.deltaTime / duration;
-	   }else{
-		float yOffset = height * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-       	agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-		normalizedTime += Time.deltaTime / duration;}
-    
-	   
      
-       yield return null;
-     }
-   }
-    /*
-        private IEnumerator InputListener() 
-    {
-        while(enabled)
-        { //Run as long as this is activ
+     while (normalizedTime < 1.0f) {
+		 if(startPos.z+1 < endPos.z){
+			float yOffset = (height*0.9f) * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
+       		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.forward;
+ 			normalizedTime += Time.deltaTime / (duration+0.1f);
+	   } else if (startPos.z> endPos.z+1){
+		    float yOffset = height * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
+       		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.forward;
+		  	normalizedTime += Time.deltaTime / duration;
+              
+            }
+            else{
+		float yOffset = height * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
+       	agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.forward;
+		normalizedTime += Time.deltaTime / duration;}
+            
 
-            if(Input.GetMouseButtonDown(0))
-                yield return ClickEvent();
 
             yield return null;
-        }
-    }
-        private IEnumerator ClickEvent()
-    {
-        //pause a frame so you don't pick up the same mouse down event.
-        yield return new WaitForEndOfFrame();
+            
 
-        float count = 0f;
-        while(count < doubleClickTimeLimit)
-        {
-            if(Input.GetMouseButtonDown(0))
-            {
-                DoubleClick();
-                yield break;
-            }
-            count += Time.deltaTime;// increment counter by change in time between frames
-            yield return null; // wait for the next frame
         }
-       SingleClick();
-        }
-
-        private void SingleClick()
-        {}*/
+   }
+   
     void FixedUpdate()
     {
         if ((Input.GetMouseButton(0)))

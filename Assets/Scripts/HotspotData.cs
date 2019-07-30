@@ -44,6 +44,7 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 					for (int i = 0; i < hotspot.ItemsRecieve.Count; i++) {
 						if (droppedItem.itemData.ID == hotspot.ItemsRecieve [i] && hotSpotDatabase.database [hotspot.ID].ItemsLimit [i] > 0) {
 							hotSpotDatabase.database [hotspot.ID].ItemsLimit [i] = -1;
+                            gameObject.SendMessage("ItemRecived",droppedItem.itemData.ID); 
 							if (droppedItem.itemAmount == 1) {
 								inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAndSize[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = -1;
 								inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = 0;
@@ -116,7 +117,6 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 	void OnTriggerStay(Collider other){
 	//this is the open command
 	if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Open"+hotspot.Slug){
-	// offending code here, green box did it Open is called on it but there is no inventory. 
 		OpenInventory(); 
 			GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName = ""; 
 		}
@@ -133,7 +133,8 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 			inventoryPanel.GetComponent<UIStayInPlace>().offset = new Vector3 (0,300,0); //this might change if you change the camera y offset --
 			inventoryPanel.name = hotspot.Slug +"_inv"; 
 			inventoryPanel.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform,false);
-			inventoryPanel.transform.position = Camera.main.WorldToScreenPoint (gameObject.transform.position) + new Vector3(0,300,0);
+            inventoryPanel.transform.SetAsFirstSibling();
+            inventoryPanel.transform.position = Camera.main.WorldToScreenPoint (gameObject.transform.position) + new Vector3(0,300,0);
 			inventoryPanel.transform.localScale = Vector3.one; 
 			Button button = inventoryPanel.transform.GetChild(0).GetComponent<Button>(); 
 			button.onClick.AddListener(CloseInventory); 

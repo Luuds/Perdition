@@ -9,11 +9,11 @@
       "MenuInterface":"Basic",
       "MenuCommands":["Examine","Open"],
       "ItemsRecieve": [0,1,-1],
-	  "ItemsLimit": [1,1,-1], 
-	  "Type":"Talk"
+	    "ItemsLimit": [1,1,-1], 
+	    "Type":"Talk"
    },
    { "ID":1,
-    "Flowchart":"Purple Box",
+    "Flowchart":"",
     "Messages":[""],
     "Counter":0,
     "Slug":"purple_box",
