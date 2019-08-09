@@ -12,7 +12,9 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 	public HotspotData parentHotspotData; 
 	NavMeshAgent agent; 
 	Gamecontroller controll; 
-	bool pointerOver; 
+	bool pointerOver;
+    bool pointerOverAnd;
+    public string interaction; 
 	// Use this for initialization
 	void Start () {
 	
@@ -24,43 +26,54 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 	}
 	public void OnPointerEnter (PointerEventData eventData)
 	{	GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/"+parentHotspot.MenuCommands[buttonNumber]+"ButtonActive");
-		pointerOver = true; 
+        StopCoroutine(PointerOver());
+        pointerOverAnd = true; 
+        pointerOver = true; 
+
 	}
 	public void OnPointerExit (PointerEventData eventData)
 	{	GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/"+parentHotspot.MenuCommands[buttonNumber]+"ButtonInactive");
-		pointerOver =false; 
+		pointerOver =false;
+        StartCoroutine (PointerOver());
 	}
 
-			
-	
+
+    IEnumerator PointerOver() {
+        yield return new WaitForSeconds(0.1f);
+        pointerOverAnd = false;
+        
+    }
 	// Update is called once per frame
 	void Update () {
-			
-	if(pointerOver){
-		if(Input.GetMouseButtonUp(0)){
+#if UNITY_EDITOR || UNITY_STANDALONE
+
+        if (pointerOver){
+            
+           // Debug.Log("Interaction Start");
+            if (Input.GetMouseButtonUp(0)){
+                Debug.Log("Interaction");
                 if (GameObject.Find(parentHotspot.Slug).transform.position.x < agent.transform.position.x)
                 {
-                    GameObject.FindGameObjectWithTag("Player Image").GetComponent<SkeletonMecanim>().skeleton.ScaleX = -1;
+                    GameObject.FindGameObjectWithTag("Player Image").GetComponent<Citizenanim>().turnLeft = true; 
 
                 }
                 else {
-                    GameObject.FindGameObjectWithTag("Player Image").GetComponent<SkeletonMecanim>().skeleton.ScaleX = 1;
+                    GameObject.FindGameObjectWithTag("Player Image").GetComponent<Citizenanim>().turnLeft = false; 
+                        
                 }
 
             if (parentHotspot.MenuCommands[buttonNumber] == "Examine"){
-            
-            PlayerTextController playerText = GameObject.FindGameObjectWithTag("Player Text").GetComponent<PlayerTextController>(); 
-			playerText.MakePlayerSay(parentHotspot.Description,parentHotspot.DescriptionCounter);
-			if(parentHotspot.DescriptionCounter<parentHotspot.Description.Count-1){
-				parentHotspot.DescriptionCounter ++; 
-				
-			}  
+                    Debug.Log("Interaction Examine");
+                    PlayerTextController playerText = GameObject.FindGameObjectWithTag("Player Text").GetComponent<PlayerTextController>(); 
+			playerText.MakePlayerSay(parentHotspot.Description,parentHotspot.DescriptionCounter,parentHotspot);
+			
 		
 			parentHotspotData.menuOpen = false;
 			controll.menuOpen =false;
 			Destroy(gameObject.transform.parent.parent.gameObject);
 		}else if(parentHotspot.MenuCommands[buttonNumber] == "Open"){
-			NavMeshHit hit; 
+                    Debug.Log("Interaction Open");
+                    NavMeshHit hit; 
 			NavMesh.SamplePosition(parentHotspotData.transform.position,out hit,1f,-1); 
 			agent.SetDestination(hit.position); 
 			agent.gameObject.GetComponent<PlayerController>().interactionName = "Open"+parentHotspot.Slug;
@@ -68,13 +81,15 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 			parentHotspotData.menuOpen = false;
 			Destroy(gameObject.transform.parent.parent.gameObject);
 		}else if(parentHotspot.MenuCommands[buttonNumber] == "Use"){//Trigger event
-			parentHotspotData.gameObject.SendMessage("Use");
+                    Debug.Log("Interaction Use");
+                    parentHotspotData.gameObject.SendMessage("Use");
 			parentHotspotData.menuOpen = false;
 			controll.menuOpen =false;
 			Destroy(gameObject.transform.parent.parent.gameObject);
 			//add more commands here and in hotspots
 		}else if(parentHotspot.MenuCommands[buttonNumber] == "Talk"){//Trigger event
-			parentHotspotData.gameObject.SendMessage("Talk");
+                    Debug.Log("Interaction Talk");
+                    parentHotspotData.gameObject.SendMessage("Talk");
 			parentHotspotData.menuOpen = false;
 			controll.menuOpen =false;
 			Destroy(gameObject.transform.parent.parent.gameObject);
@@ -83,7 +98,85 @@ public class InteractionButtonScript : MonoBehaviour,IPointerEnterHandler,IPoint
 		}
 		
 	}
-	}
+#endif
+
+#if UNITY_ANDROID
+
+        if (Input.touchCount>0 && pointerOverAnd)
+        {
+            Debug.Log("Interaction Start");
+            foreach (Touch touch in Input.touches)
+            {
+                if (touch.phase == TouchPhase.Ended)
+
+
+                {
+                    Debug.Log("Interaction");
+                    if (GameObject.Find(parentHotspot.Slug).transform.position.x < agent.transform.position.x)
+                    {
+                        GameObject.FindGameObjectWithTag("Player Image").GetComponent<Citizenanim>().turnLeft = true;
+
+                    }
+                    else
+                    {
+                        GameObject.FindGameObjectWithTag("Player Image").GetComponent<Citizenanim>().turnLeft = false;
+
+                    }
+
+                    if (parentHotspot.MenuCommands[buttonNumber] == "Examine" && interaction == "Examine")
+                    {
+                        Debug.Log("Interaction Examine");
+                        PlayerTextController playerText = GameObject.FindGameObjectWithTag("Player Text").GetComponent<PlayerTextController>();
+                        playerText.MakePlayerSay(parentHotspot.Description, parentHotspot.DescriptionCounter, parentHotspot);
+                       
+                        parentHotspotData.menuOpen = false;
+                        controll.menuOpen = false;
+                        Destroy(gameObject.transform.parent.parent.gameObject);
+                    }
+                    else if (parentHotspot.MenuCommands[buttonNumber] == "Open" && interaction == "Open")
+                    {
+                        Debug.Log("Interaction Open");
+                        NavMeshHit hit;
+                        NavMesh.SamplePosition(parentHotspotData.transform.position, out hit, 1f, -1);
+                        agent.SetDestination(hit.position);
+                        agent.gameObject.GetComponent<PlayerController>().interactionName = "Open" + parentHotspot.Slug;
+                        controll.menuOpen = false;
+                        parentHotspotData.menuOpen = false;
+                        Destroy(gameObject.transform.parent.parent.gameObject);
+                    }
+                    else if (parentHotspot.MenuCommands[buttonNumber] == "Use" && interaction == "Use")
+                    {//Trigger event
+                        Debug.Log("Interaction Use");
+                        parentHotspotData.gameObject.SendMessage("Use");
+                        parentHotspotData.menuOpen = false;
+                        controll.menuOpen = false;
+                        Destroy(gameObject.transform.parent.parent.gameObject);
+                        //add more commands here and in hotspots
+                    }
+                    else if (parentHotspot.MenuCommands[buttonNumber] == "Talk" && interaction == "Talk")
+                    {//Trigger event
+                        Debug.Log("Interaction Talk");
+                        parentHotspotData.gameObject.SendMessage("Talk");
+                        parentHotspotData.menuOpen = false;
+                        controll.menuOpen = false;
+                        Destroy(gameObject.transform.parent.parent.gameObject);
+                        //add more commands here and in hotspots
+                    }
+                    else if (parentHotspot.MenuCommands[buttonNumber] == null)
+                    {//Trigger event
+                        Debug.Log("Nulll");
+                        parentHotspotData.menuOpen = false;
+                        controll.menuOpen = false;
+                        Destroy(gameObject.transform.parent.parent.gameObject);
+                        //add more commands here and in hotspots
+                    }
+                }
+            }
+        }
+#endif
+
+    }
+
 }
 /*	while (agent.velocity.x > 0f){
 				Debug.Log("Open3");

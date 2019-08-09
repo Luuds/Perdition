@@ -2,15 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using LitJson; 
+using LitJson;
+
+
 public class EventandTalkDatabase : MonoBehaviour {
 
 	public List<EventTalk> database = new List<EventTalk> (); 
-	private JsonData eventTalkData; 
-	// Use this for initialization
-	void Start () {
-		eventTalkData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssets/EventTalk.json")); 
-		ConstructEventTalkDatabase (); 
+	private JsonData eventTalkData;
+
+    // Use this for initialization
+    void Start ()
+    {
+
+        eventTalkData = JsonMapper.ToObject(Resources.Load<TextAsset>("Databases/EventTalk").ToString());
+
+
+
+        ConstructEventTalkDatabase (); 
 	}
 
 	public void ConstructEventTalkDatabase(){

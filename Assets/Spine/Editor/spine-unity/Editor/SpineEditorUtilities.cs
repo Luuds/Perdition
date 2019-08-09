@@ -1182,7 +1182,7 @@ namespace Spine.Unity.Editor {
 
 					var root = obj as Dictionary<string, object>;
 					if (root == null) {
-						Debug.LogError("Parser returned an incorrect type.");
+						//Debug.LogError("Parser returned an incorrect type.");
 						return false;
 					}
 

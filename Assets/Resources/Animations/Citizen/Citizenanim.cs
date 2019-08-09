@@ -37,19 +37,21 @@ public class Citizenanim : MonoBehaviour
         {
             anim.SetBool("Stop", false);
             anim.SetFloat("Velocity", -(velocity / agent.speed));
-            turnLeft = true;
+           turnLeft = true;
             GetComponent<SkeletonMecanim>().Skeleton.ScaleX = -1; 
         }
         else if (velocity == 0f)
         {
             anim.SetFloat("Velocity", 0);
             anim.SetBool("Stop",true);
-            if (turnLeft == true) {
+           if (turnLeft == true) {
             GetComponent<SkeletonMecanim>().Skeleton.ScaleX = -1;
+             
             }
             else if (turnLeft != true)
             {
                 GetComponent<SkeletonMecanim>().Skeleton.ScaleX = 1;
+             
             }
         }
            

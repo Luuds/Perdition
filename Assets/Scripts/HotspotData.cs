@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; 
 using UnityEngine.EventSystems; 
-public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
+public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler, IDropHandler {
 	public string hotspotName; 
 	public Hotspot hotspot; 
 	HotspotDatabase hotSpotDatabase;
@@ -16,7 +16,7 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 	GameObject inventoryItem; 
 	GameObject createdMenu;
 	public List <GameObject> slots = new List <GameObject>(); 
-	public bool pressed = false; 
+	public bool pressed = false;
 	// Use this for initialization
 	void Start () {
 		hotSpotDatabase = GameObject.FindGameObjectWithTag ("GameController").GetComponent<HotspotDatabase> ();
@@ -28,51 +28,14 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 		inventorySlot = Resources.Load<GameObject> ("Prefab/Slot") ; 
 		inventoryItem = Resources.Load<GameObject> ("Prefab/Item") ;
 	}
-		void OnMouseOver ()
-	{	
-		if (Input.GetMouseButtonUp (0) && controll.itemDraggedbool) { 
-			if (hotspot.AcceptItem == true) {
-				//Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition); 
-				Ray ray =Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit hit;
-				Physics.Raycast (ray, out hit); 
-				if (hit.collider != null && controll.itemDraggedData != null) {
-					
-					ItemData droppedItem = controll.itemDraggedData; 
-					GameObject itemRef =controll.itemDraggedData.gameObject; 
-					controll.itemDraggedData = null; 
-					for (int i = 0; i < hotspot.ItemsRecieve.Count; i++) {
-						if (droppedItem.itemData.ID == hotspot.ItemsRecieve [i] && hotSpotDatabase.database [hotspot.ID].ItemsLimit [i] > 0) {
-							hotSpotDatabase.database [hotspot.ID].ItemsLimit [i] = -1;
-                            gameObject.SendMessage("ItemRecived",droppedItem.itemData.ID); 
-							if (droppedItem.itemAmount == 1) {
-								inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAndSize[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = -1;
-								inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = 0;
-								Destroy (itemRef); 
-
-							} else {
-								droppedItem.itemAmount -= 1; 
-								inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] --;
-								if (droppedItem.itemAmount == 0) {
-									itemRef.transform.GetChild (0).GetComponent<Text> ().text = "";
-								} else {
-									itemRef.transform.GetChild (0).GetComponent<Text> ().text = (droppedItem.itemAmount ).ToString ();
-								}
-							}
-						}}}}
-						//Debug.Log(hotspot.ItemsLimit[1].ToString());
-                        // it's in this method you should put the trigger for your object dropp ie what happens when the object accepts shit. Make a new script that can recieve a send message from here. 
-						}}
-
 	
-	void OnMouseExit (){
-		
-	}
 	IEnumerator CreateMenu(){
 		Vector3 mousePosition =Input.mousePosition;  
 		yield return new WaitForSeconds(0.08f); 
-		if (hotspot.MenuInterface != "" && menuOpen== false&&pressed&&controll.menuOpen == false){
-			menuOpen = true; 
+		if (hotspot.MenuInterface != "" && menuOpen== false&&pressed&&controll.menuOpen == false)
+        {
+            Debug.Log("HotspotDataMenu created");
+            menuOpen = true; 
 			controll.menuOpen = true; 
 			GameObject menuRef = Resources.Load<GameObject> ("Prefab/"+"Menu_"+hotspot.MenuInterface) ; 
 			GameObject menu = Instantiate(menuRef,mousePosition,Quaternion.identity); 
@@ -88,8 +51,10 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 					GameObject button = Instantiate(buttonRef,Vector2.zero,Quaternion.identity);
 					button.transform.SetParent(menu.transform.GetChild(i),false);
 					button.transform.position = menu.transform.GetChild(i).transform.position; 
-					menu.transform.localScale = Vector3.one; 
-					button.GetComponent<Image>().sprite =Resources.Load<Sprite> ("UI/"+hotspot.MenuCommands[i]+"ButtonInactive");   // change this to icon change or something just letting you know
+					menu.transform.localScale = Vector3.one;
+                    button.GetComponent<InteractionButtonScript>().interaction = hotspot.MenuCommands[i];
+                    Debug.Log(button.GetComponent<InteractionButtonScript>().interaction); 
+                    button.GetComponent<Image>().sprite =Resources.Load<Sprite> ("UI/"+hotspot.MenuCommands[i]+"ButtonInactive");   // change this to icon change or something just letting you know
 					button.GetComponent<InteractionButtonScript>().parentHotspot = hotspot; 
 					button.GetComponent<InteractionButtonScript>().parentHotspotData = this; 
 					button.GetComponent<InteractionButtonScript>().buttonNumber = i; 
@@ -97,7 +62,8 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 			}
 			yield return null; 
 		}else if(menuOpen&&!pressed&&createdMenu!=null) {
-			Destroy(createdMenu,0.08f);
+            Debug.Log("HotspotDataMenu detroyed");
+            Destroy(createdMenu,0.08f);
 			menuOpen =false; 
 			controll.menuOpen = false;
 			yield return null;  
@@ -105,15 +71,18 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 	}
 	public void OnPointerDown(PointerEventData eventData){
 		pressed = true; 
+
 		StartCoroutine(CreateMenu()); 
 		
 	}
 	public void OnPointerUp(PointerEventData eventData){
+       
+        pressed = false;
+        
+        StartCoroutine(CreateMenu());
+       
 
-		pressed = false; 
-		StartCoroutine(CreateMenu()); 
-		
-	}
+    }
 	void OnTriggerStay(Collider other){
 	//this is the open command
 	if(other.gameObject.tag == "Player"&& GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName == "Open"+hotspot.Slug){
@@ -173,6 +142,104 @@ public class HotspotData : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 		
 	}
 	void Update () {
-		
+        
 	}
+
+    public void OnDrop(PointerEventData eventData)
+    {
+      
+        if (controll.itemDraggedbool)
+        {
+          
+            if (hotspot.AcceptItem == true)
+            {
+              
+                //Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition); 
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                Physics.Raycast(ray, out hit);
+                if (hit.collider != null && controll.itemDraggedData != null && hotspot.ItemType == "")
+                {
+
+                    Debug.Log(controll.itemDraggedData.GetComponent<ItemData>().itemData.Title);
+                    ItemData droppedItem = controll.itemDraggedData;
+                    GameObject itemRef = controll.itemDraggedData.gameObject;
+                    controll.itemDraggedData = null;
+                    controll.menuOpen = false; 
+                    for (int i = 0; i < hotspot.ItemsRecieve.Count; i++)
+                    {
+
+                        if (droppedItem.itemData.ID == hotspot.ItemsRecieve[i] && hotSpotDatabase.database[hotspot.ID+1].ItemsLimit[i] > 0)
+                        {
+                            hotSpotDatabase.database[hotspot.ID+1].ItemsLimit[i] = -1;
+                            gameObject.SendMessage("ItemRecived", droppedItem.itemData.ID);
+                            if (droppedItem.itemAmount == 1)
+                            {
+                                inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAndSize[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = -1;
+                                inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = 0;
+                                Destroy(itemRef);
+
+                            }
+                            else
+                            {
+                                droppedItem.itemAmount -= 1;
+                                inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID]--;
+                                if (droppedItem.itemAmount == 0)
+                                {
+                                    itemRef.transform.GetChild(0).GetComponent<Text>().text = "";
+                                }
+                                else
+                                {
+                                    itemRef.transform.GetChild(0).GetComponent<Text>().text = (droppedItem.itemAmount).ToString();
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (hit.collider != null && controll.itemDraggedData != null && hotspot.ItemType != "")
+                {
+
+                    Debug.Log(controll.itemDraggedData.GetComponent<ItemData>().itemData.Title);
+                    ItemData droppedItem = controll.itemDraggedData;
+                    GameObject itemRef = controll.itemDraggedData.gameObject;
+                    controll.itemDraggedData = null;
+                    controll.menuOpen = false;
+                    
+
+                        if (droppedItem.itemData.Type == hotspot.ItemType)
+                        {
+                           
+                            gameObject.SendMessage("ItemRecived", droppedItem.itemData.ID);
+                            if (droppedItem.itemAmount == 1)
+                            {
+                                inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAndSize[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = -1;
+                                inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID] = 0;
+                                Destroy(itemRef);
+
+                            }
+                            else
+                            {
+                                droppedItem.itemAmount -= 1;
+                                inv.database[droppedItem.itemSlot.GetComponent<SlotBehaviour>().invID].ItemsAmount[droppedItem.itemSlot.GetComponent<SlotBehaviour>().slotID]--;
+                                if (droppedItem.itemAmount == 0)
+                                {
+                                    itemRef.transform.GetChild(0).GetComponent<Text>().text = "";
+                                }
+                                else
+                                {
+                                    itemRef.transform.GetChild(0).GetComponent<Text>().text = (droppedItem.itemAmount).ToString();
+                                }
+                            }
+                        }
+                    }
+              
+
+
+
+
+            }
+            //Debug.Log(hotspot.ItemsLimit[1].ToString());
+            // it's in this method you should put the trigger for your object dropp ie what happens when the object accepts shit. Make a new script that can recieve a send message from here. 
+        }
+    }
 }

@@ -1,32 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI; 
 using LitJson; 
-using System.IO; 
+using System.IO;
+using UnityEngine.Networking;
 
 public class InventoryDatabase : MonoBehaviour {
-	public List<Inventory> database = new List<Inventory> (); 
-	private JsonData inventoryData; 
-	private GameObject inventoryPanelRef;
-	private GameObject inventorySlot;
-	private GameObject inventoryItem; 
-	public bool invOpen_main_inv = false; 
-	ItemDatabase itemDatabase; 
-	Gamecontroller control; 
-	public List <GameObject> slots = new List <GameObject>(); 
-	void Start ()
-	{	control = GetComponent<Gamecontroller>(); 
-		inventoryPanelRef =  Resources.Load<GameObject> ("Prefab/main_inv");
-		inventorySlot = Resources.Load<GameObject> ("Prefab/Slot") ; 
-		inventoryItem = Resources.Load<GameObject> ("Prefab/Item") ;
-		itemDatabase = GetComponent<ItemDatabase>(); 
-		inventoryData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssets/Inventorys.json")); 
-		ConstructInventoryDatabase (); 
-		
-	
+    public List<Inventory> database = new List<Inventory>();
+    private JsonData inventoryData;
+    private GameObject inventoryPanelRef;
+    private GameObject inventorySlot;
+    private GameObject inventoryItem;
+    public bool invOpen_main_inv = false;
+    ItemDatabase itemDatabase;
+    Gamecontroller control;
+    public List<GameObject> slots = new List<GameObject>();
+    private string path;
+    void Start()
+    {
+       //path = "Inventorys"; 
+        inventoryData = JsonMapper.ToObject(Resources.Load<TextAsset>("Databases/Inventorys").ToString());
 
-	}
+
+        control = GetComponent<Gamecontroller>();
+        inventoryPanelRef = Resources.Load<GameObject>("Prefab/main_inv");
+        inventorySlot = Resources.Load<GameObject>("Prefab/Slot");
+        inventoryItem = Resources.Load<GameObject>("Prefab/Item");
+        itemDatabase = GetComponent<ItemDatabase>();
+       
+        ConstructInventoryDatabase();
+
+
+
+    }
+    
 	public bool CheckIfItemInInventory(int Inv, Item item){
 	
 
@@ -124,7 +133,7 @@ public class InventoryDatabase : MonoBehaviour {
 			RectTransform invPanelRect = inventoryPanel.GetComponent<RectTransform>(); 
 			inventoryPanel.name = "main_inv"; 
 			inventoryPanel.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform,false);
-			invPanelRect.localPosition = GameObject.FindGameObjectWithTag("Inventory Button").GetComponent<RectTransform>().localPosition + new Vector3 (0, -25, 0); 
+			//invPanelRect.localPosition = GameObject.FindGameObjectWithTag("Inventory Button").GetComponent<RectTransform>().localPosition + new Vector3 (-450, 50, 0); 
 			inventoryPanel.transform.localScale = Vector3.one; 
 			// instantiate inv panel here
 		for (int i = 0; i < database[0].ItemsAndSize.Count; i++){
@@ -159,8 +168,35 @@ public class InventoryDatabase : MonoBehaviour {
 		}
 	}
 
-	// add item instantiation save and load here ????
-	public Inventory FetchInventoryByTitle(string title){
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
+    private void Update()
+    {/*
+        if (invOpen_main_inv) {
+            if (Input.GetMouseButton(0) && !IsPointerOverUIObject())
+            {
+                Destroy(GameObject.FindWithTag("Main Inventory"));
+                Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                slots.Clear();
+                invOpen_main_inv = false;
+                control.itemHeldbool = false;
+                control.itemHeldObj = null;
+                control.slotSelect = null;
+            }
+
+
+        }
+
+        */
+    }
+    // add item instantiation save and load here ????
+    public Inventory FetchInventoryByTitle(string title){
 	
 		for (int i = 0; i < database.Count; i++) 
 			if (database[i].Title == title)

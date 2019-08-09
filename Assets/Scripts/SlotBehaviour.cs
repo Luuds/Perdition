@@ -93,10 +93,26 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 			this.gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotActive");
 
                 GameObject menuObj = Instantiate(desc_Menu);
+                control.menuOpen = true; 
                 menuObj.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform);
-                menuObj.transform.position = transform.position + new Vector3(-170, 0);
+                menuObj.transform.position = transform.position + new Vector3(0,100);
                 menuObj.transform.localScale = Vector3.one;
-                menuObj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = childItem.GetComponent<ItemData>().itemData.Description; 
+                menuObj.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = childItem.GetComponent<ItemData>().itemData.Title;
+                menuObj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = childItem.GetComponent<ItemData>().itemData.Description;
+                menuObj.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Item Type: "+ childItem.GetComponent<ItemData>().itemData.Type;
+                menuObj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text += "\nValue: " + childItem.GetComponent<ItemData>().itemData.Value.ToString();
+                if (childItem.GetComponent<ItemData>().itemData.Type == "Consumable")
+                {
+                    menuObj.transform.GetChild(0).GetChild(0).GetComponent<Text>().text += "\n<color=green>Energy: +" + childItem.GetComponent<ItemData>().itemData.Energy.ToString() +"</color>";
+                    menuObj.transform.GetChild(0).GetChild(1).GetComponent<Text>().color = Color.yellow;
+                }
+                else if (childItem.GetComponent<ItemData>().itemData.Type == "Seed") {
+                    menuObj.transform.GetChild(0).GetChild(1).GetComponent<Text>().color = Color.green;
+                }
+                else if (childItem.GetComponent<ItemData>().itemData.Type == "Artifact")
+                {
+                    menuObj.transform.GetChild(0).GetChild(1).GetComponent<Text>().color = Color.cyan;
+                }
             }
 		}
 	if(control.itemHeldbool==true && control.slotSelect!=this.gameObject){
@@ -105,8 +121,7 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 				if(childItem.GetComponent<ItemData>().itemData.ID ==control.itemHeldObj.GetComponent<ItemData>().itemData.ID 
 				 		&&childItem.GetComponent<ItemData>().itemData.Stackable == true
 						&&childItem.GetComponent<ItemData>().itemAmount < childItem.GetComponent<ItemData>().itemData.StackLimit){
-					
-					
+									
 						childItem.GetComponent<ItemData>().itemAmount ++; 
 						childItem.transform.GetChild(0).GetComponent<Text>().text =childItem.GetComponent<ItemData>().itemAmount.ToString();
 						if (control.itemHeldObj.GetComponent<ItemData>().itemAmount==1){
@@ -115,10 +130,11 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 							Destroy(control.itemHeldObj);
 							control.itemHeldObj = null; 
 							control.itemHeldbool=false;
-                        Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
-                        control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
-							control.slotSelect =null; 
-					} else{
+                            Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                            control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+							control.slotSelect =null;
+                            control.menuOpen = false;
+                    } else{
 						control.itemHeldObj.GetComponent<ItemData>().itemAmount--; 
 						inv.database[invID].ItemsAmount[slotID]--; 
 						if(control.itemHeldObj.GetComponent<ItemData>().itemAmount==1){
@@ -130,26 +146,30 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
 						control.itemHeldbool=false;
                         Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
                         control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
-						control.slotSelect =null; 
-					}
+						control.slotSelect =null;
+                        control.menuOpen = false;
+                    }
 				 
 				
 
 				}else{
 				control.itemHeldObj.transform.SetParent(this.gameObject.transform);
-				childItem.transform.SetParent(control.slotSelect.transform); 
+                control.itemHeldObj.GetComponent<ItemData>().itemSlot = this.gameObject;
+                    childItem.GetComponent<ItemData>().itemSlot = control.slotSelect; 
+                childItem.transform.SetParent(control.slotSelect.transform); 
 				inv.database[invID].ItemsAndSize[slotID] = control.itemHeldObj.GetComponent<ItemData>().itemData.ID; 
 				inv.database[control.slotSelect.GetComponent<SlotBehaviour>().invID].ItemsAndSize[control.slotSelect.GetComponent<SlotBehaviour>().slotID] = 
 				childItem.GetComponent<ItemData>().itemData.ID; 
 				inv.database[invID].ItemsAmount[slotID] = control.itemHeldObj.GetComponent<ItemData>().itemAmount; 
 				inv.database[control.slotSelect.GetComponent<SlotBehaviour>().invID].ItemsAmount[control.slotSelect.GetComponent<SlotBehaviour>().slotID] = 
 				childItem.GetComponent<ItemData>().itemAmount;
-                    Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
-                    control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
+                Destroy(GameObject.FindGameObjectWithTag("Description Menu"));
+                control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 				control.itemHeldObj = null; 
 				control.itemHeldbool=false;
-				control.slotSelect =null; 
-				}
+				control.slotSelect =null;
+                control.menuOpen = false;
+                }
 			}else{if (control.itemHeldObj.GetComponent<ItemData>().itemAmount >1){
 					inv.database[invID].ItemsAndSize[slotID] = control.itemHeldObj.GetComponent<ItemData>().itemData.ID;
 							inv.database[invID].ItemsAmount[slotID] = 1; 
@@ -172,8 +192,9 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
                     control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 							control.itemHeldObj = null; 
 							control.itemHeldbool=false;
-							control.slotSelect =null; 
-			}	else{	
+							control.slotSelect =null;
+                    control.menuOpen = false;
+                }	else{	
 			control.itemHeldObj.transform.SetParent(this.gameObject.transform); 
 			inv.database[invID].ItemsAndSize[slotID] = control.itemHeldObj.GetComponent<ItemData>().itemData.ID; 
 			inv.database[control.slotSelect.GetComponent<SlotBehaviour>().invID].ItemsAndSize[control.slotSelect.GetComponent<SlotBehaviour>().slotID] = -1; 
@@ -183,8 +204,9 @@ public class SlotBehaviour : MonoBehaviour,IDropHandler,IPointerClickHandler {
                     control.slotSelect.GetComponent<Image>().sprite = Resources.Load<Sprite> ("UI/SlotInactive"); 
 			control.itemHeldObj = null; 
 			control.itemHeldbool=false;
-			control.slotSelect =null; 
-			}
+			control.slotSelect =null;
+                    control.menuOpen = false;
+                }
 			}
 		}
 	}

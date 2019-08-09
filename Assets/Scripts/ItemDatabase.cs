@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson; 
-using System.IO; 
+using System.IO;
+
 
 public class ItemDatabase : MonoBehaviour {
 	public List<Item> database = new List<Item> (); 
-	private JsonData itemData; 
+	private JsonData itemData;
 
 	void Start ()
 	{
-		itemData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssets/Items.json")); 
-		ConstructItemDatabase (); 
+
+        itemData = JsonMapper.ToObject(Resources.Load<TextAsset>("Databases/Items").ToString());
+
+
+        // itemData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssets/Items.json")); 
+        ConstructItemDatabase (); 
 
 	
 
@@ -42,7 +47,7 @@ public class ItemDatabase : MonoBehaviour {
 		for (int i = 0; i < itemData.Count; i++) {
 			database.Add (new Item ((int)itemData [i] ["id"], itemData [i] ["title"].ToString (), (int)itemData [i] ["value"],
 				itemData [i] ["description"].ToString (),itemData [i] ["slug"].ToString (),(bool)itemData [i] ["stackable"],
-				(int)itemData [i] ["stackLimit"], itemData [i] ["type"].ToString ())); 
+				(int)itemData [i] ["stackLimit"], itemData [i] ["type"].ToString (), (int)itemData[i]["energy"])); 
 		}
 	}
 }
@@ -58,8 +63,9 @@ public class Item{
 	public bool Stackable{ get; set; }
 	public int StackLimit{ get; set;}
 	public string Type{ get; set;}
+    public int Energy { get; set; }
 
-	public Item (int id, string title, int value, string description, string slug, bool stackable, int stackLimit, string type){
+    public Item (int id, string title, int value, string description, string slug, bool stackable, int stackLimit, string type, int energy){
 	
 		this.ID = id;
 		this.Title = title; 
@@ -69,7 +75,8 @@ public class Item{
 		this.Sprite = Resources.Load<Sprite> ("Items/" + slug); 
 		this.Stackable = stackable; 
 		this.StackLimit = stackLimit; 
-		this.Type = type; 
+		this.Type = type;
+        this.Energy = energy;
 	}
 	public Item(){
 	

@@ -19,18 +19,30 @@ using UnityEngine.UI;
 	{		this.transform.SetParent (this.transform.parent.parent.parent); 
 			this.transform.position = eventData.position; 
 			controll.itemDraggedbool= true; 
-			controll.itemDraggedData= this; 
-			GetComponent<CanvasGroup> ().blocksRaycasts = false;
-	}
+			controll.itemDraggedData= this;
+            gameObject.layer = 2;
+        controll.menuOpen = true; 
+            GetComponent<CanvasGroup> ().blocksRaycasts = false;
+        Debug.Log("Drag Begin");
+    }
 	public void OnDrag (PointerEventData eventData)
-	{		this.transform.position = eventData.position;}
-	public void OnEndDrag (PointerEventData eventData)
-	{		this.transform.SetParent (itemSlot.transform); 
-			this.transform.position =itemSlot.transform.position; 
-			controll.itemDraggedbool = false; 
-			controll.itemDraggedData= null; 
-			GetComponent<CanvasGroup> ().blocksRaycasts = true; 
 
-	}
+	{
+        this.transform.position = eventData.position;
+        Debug.Log("Drag");
+    }
+	public void OnEndDrag (PointerEventData eventData)
+    {
+        controll.menuOpen = false;
+        Debug.Log("End Drag"); 
+        this.transform.SetParent(itemSlot.transform);
+        this.transform.position = itemSlot.transform.position;
+        controll.itemDraggedbool = false;
+        controll.itemDraggedData = null;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        gameObject.layer = 5;
+    }
+
+
 
 }

@@ -29,20 +29,32 @@ public class UseBaseConsole : MonoBehaviour {
                 menuInst = Resources.Load<GameObject>("Prefab/BaseButtonsPanel");
                 menu = Instantiate(menuInst, Vector3.zero, Quaternion.identity);
                 menu.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform);
-                menu.transform.localScale = Vector3.one;
+                //menu.transform.localScale = Vector3.one;
                 menu.transform.localPosition = Vector3.zero;
                 controll.menuOpen = true;
                // GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName = "";
                 
             }
-        
-			
-			
-	
-		//put other commands here 
-	}
-	// Update is called once per frame
-	void Update () {
+        if (parentHotspotData.hotspot.Slug == "stabilizer_console")
+        {
+            menuInst = Resources.Load<GameObject>("Prefab/StabilizerUI/Stabilizer");
+            menu = Instantiate(menuInst, Vector3.zero, Quaternion.identity);
+            menu.transform.SetParent(GameObject.FindGameObjectWithTag("Main Canvas").transform,false);
+            //menu.transform.localScale = Vector3.one;
+            menu.GetComponent<RectTransform>().anchoredPosition =Vector3.zero;
+            //menu.transform.localPosition = new Vector3(0, -400, 0);
+            controll.menuOpen = true;
+            // GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactionName = "";
+
+        }
+
+
+
+
+        //put other commands here 
+    }
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }

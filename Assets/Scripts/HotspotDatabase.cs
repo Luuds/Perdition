@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
-using System.IO; 
+using System.IO;
+
+
 public class HotspotDatabase : MonoBehaviour {
 	public List<Hotspot> database = new List<Hotspot> (); 
-	private JsonData hotspotData; 
+	private JsonData hotspotData;
+
 	// Use this for initialization
 	void Start () {
-		hotspotData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssets/Hotspots.json")); 
+
+        //path = Application.dataPath + "/StreamingAssets/Inventorys.json";
+        hotspotData = JsonMapper.ToObject(Resources.Load<TextAsset>("Databases/Hotspots").ToString());
+       //hotspotData = JsonMapper.ToObject (File.ReadAllText(path +"/Hotspots.json")); 
 		ConstructHotspotDatabase (); 
 	}
 

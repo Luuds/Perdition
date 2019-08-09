@@ -1,0 +1,48 @@
+[
+  {
+    "id": -1,
+    "title": "No Item",
+    "value": 0,
+    "description": "Hey There",
+    "slug": "",
+    "stackable": false,
+    "stackLimit": 0,
+    "type": "",
+    "energy": 0
+  },
+  {
+    "id": 0,
+    "title": "Green Energy Bar",
+    "value": 5,
+    "description": "A Hedgemony issue \"Energy Bar\".\nThe flavour is Green.",
+    "slug": "energy_bar",
+    "stackable": true,
+    "stackLimit": 5,
+    "type": "Consumable",
+    "energy": 15
+  },
+
+  {
+    "id": 1,
+    "title": "Purple Cube",
+    "value": 20,
+    "description": "Gay",
+    "slug": "purple_cube",
+    "stackable": false,
+    "stackLimit": 0,
+    "type": "Artifact",
+    "energy": 35
+  },
+
+  {
+    "id": 2,
+    "title": "Basic Seed",
+    "value": 20,
+    "description": "Homo",
+    "slug": "basic_seed",
+    "stackable": true,
+    "stackLimit": 5,
+    "type": "Seed",
+    "energy": 0
+  }
+    ]    

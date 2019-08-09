@@ -7,7 +7,8 @@ public class PlayerTextController : MonoBehaviour {
 	GameObject player ;
 	Text text;
 	int currentlyDisplayingText;
-	List <string> playerSays = new List <string>(); 
+	List <string> playerSays = new List <string>();
+    private Hotspot hotspot; 
 	bool fade,ongoing; 
 	float t; 
 	Color a = new Color32(255,255,255,255);
@@ -18,10 +19,11 @@ public class PlayerTextController : MonoBehaviour {
 		text = GetComponent<Text>(); 
 	
 	}
-	public void MakePlayerSay(List <string> descriptions, int curDesc){
+	public void MakePlayerSay(List <string> descriptions, int curDesc, Hotspot curHotspot){
 	if(!ongoing){
 	playerSays = descriptions; 
-	currentlyDisplayingText = curDesc; 
+	currentlyDisplayingText = curDesc;
+    hotspot = curHotspot; 
 	StartCoroutine(AnimateText());
 	}
 	}
@@ -41,7 +43,12 @@ public class PlayerTextController : MonoBehaviour {
          yield return new WaitForSeconds(wait);
      }
 	 yield return new WaitForSeconds(1.1f);
-	 ongoing= false;   
+        if (hotspot.DescriptionCounter < hotspot.Description.Count - 1)
+        {
+            hotspot.DescriptionCounter++;
+
+        }
+        ongoing = false;   
 	 fade= true; 
  }
  void FixedUpdate(){
